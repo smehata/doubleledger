@@ -17,6 +17,7 @@ def create_invoice_adj_jv(self,cdt):
         customer_dp = None
         supplier_dp = None
         primary_role_dp = None
+        business_unit_dp = None
 
         if customer_list:
             for msg in customer_list:
@@ -33,12 +34,14 @@ def create_invoice_adj_jv(self,cdt):
             jv.posting_date = doc.posting_date
             jv.company = doc.company
             jv.remark = 'Adjustment for Sales Invoice# {0}'.format(doc.name)
+            business_unit_dp = doc.business_unit
 
         #Entry for Customer
             jv.append('accounts', {
                 'account': customer_account_type,
                 'party_type': 'Customer',
                 'party': customer_dp,
+                'business_unit': business_unit_dp,
                 'reference_type': 'Sales Invoice',
                 'reference_name': doc.name,
                 'credit_in_account_currency': doc.outstanding_amount
@@ -48,6 +51,7 @@ def create_invoice_adj_jv(self,cdt):
                 'account': supplier_account_type,
                 'party_type': 'Supplier',
                 'party': supplier_dp,
+                'business_unit': business_unit_dp,
                 'debit_in_account_currency': doc.outstanding_amount,
                 'is_advance': 'Yes'
             })
@@ -61,7 +65,7 @@ def create_invoice_adj_jv(self,cdt):
         customer_dp = None
         supplier_dp = None
         primary_role_dp = None
-        
+        business_unit_dp = None
         if supplier_list:
             for msg in supplier_list:
                 customer_dp = msg.customer
@@ -77,12 +81,14 @@ def create_invoice_adj_jv(self,cdt):
             jv.posting_date = doc.posting_date
             jv.company = doc.company
             jv.remark = 'Adjustment for Purchase Invoice# {0}'.format(doc.name)
+            business_unit_dp = doc.business_unit
 
         #Entry for Customer
             jv.append('accounts', {
                 'account': customer_account_type,
                 'party_type': primary_role_dp,
                 'party': customer_dp,
+                'business_unit': business_unit_dp,
                 'credit_in_account_currency': doc.outstanding_amount,
                 'is_advance': 'Yes'
             })
@@ -91,6 +97,7 @@ def create_invoice_adj_jv(self,cdt):
                 'account': supplier_account_type,
                 'party_type': 'Supplier',
                 'party': supplier_dp,
+                'business_unit': business_unit_dp,
                 'debit_in_account_currency': doc.outstanding_amount,
                 'reference_type': 'Purchase Invoice',
                 'reference_name': doc.name
